@@ -2,6 +2,7 @@
 
 namespace Nin\Controllers;
 
+use Nin\Libs\Facades\Auth;
 use Nin\Repositories\FooRepositoryInterface;
 
 class FooController
@@ -15,7 +16,9 @@ class FooController
 
     public function indexAction()
     {
-        die('index');
+        $check = Auth::check();
+        $user = Auth::user();
+        var_dump($user);
     }
 
     public function loadAction($id)

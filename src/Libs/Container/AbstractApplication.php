@@ -3,6 +3,7 @@
 namespace Nin\Libs\Container;
 
 use Nin\Libs\Controller\ControllerInterface;
+use Nin\Libs\Facades\RegisterFacade;
 use Nin\Libs\Routing\RouteConfigInterface;
 use Nin\Libs\Routing\RoutingInterface;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -41,6 +42,7 @@ abstract class AbstractApplication
     protected array $defaultDependencies = [
         \Nin\Libs\Routing\RouteConfigInterface::class => \Nin\Libs\Routing\RoutingConfigurator::class,
         \Nin\Libs\Request\RequestInterface::class => \Nin\Libs\Request\Factory::class,
+        \Nin\Libs\Auth\AuthManagerFactory::class => \Nin\Libs\Auth\AuthManager::class
     ];
 
     /**
@@ -63,12 +65,12 @@ abstract class AbstractApplication
         $this->boot();
     }
 
-    protected function bind($instance, $concrete = null)
+    public function bind($instance, $concrete = null)
     {
         $this->container->bind($instance, $concrete);
     }
 
-    protected function make($instance)
+    public function make($instance)
     {
         return $this->container->make($instance);
     }
@@ -92,6 +94,11 @@ abstract class AbstractApplication
          */
         $routeConfig = $this->make(\Nin\Libs\Routing\RouteConfigInterface::class);
         $this->router = $this->configureRoutes($routeConfig)->getRoute();
+
+        /**
+         * Register Facade
+         */
+        (new RegisterFacade())->bootstrap($this);
     }
 
     public function getRouterConfig(): RouteConfigInterface
