@@ -2,33 +2,17 @@
 
 namespace Nin\Libs\Container;
 
-use Nin\Libs\Controller\ControllerInterface;
+use Nin\Libs\Config\ConfigContract as ConfigContract;
 use Nin\Libs\Facades\RegisterFacade;
-use Nin\Libs\Routing\RouteConfigInterface;
-use Nin\Libs\Routing\RoutingInterface;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 /**
  * Class AbstractApplication
  * @package Nin\Libs\Container
  */
-abstract class AbstractApplication
+abstract class AbstractApplication implements ApplicationContract
 {
-
-    /**
-     * @var RoutingInterface
-     */
-    protected RoutingInterface $router;
-
-    /**
-     * @var RouteConfigInterface
-     */
-    protected RouteConfigInterface $routerConfig;
-
-    /**
-     * @var ControllerInterface
-     */
-    protected ControllerInterface $controller;
+    use Handle;
+    use BootDependency;
 
     /**
      * @var ContainerInterface
@@ -36,14 +20,9 @@ abstract class AbstractApplication
     protected ContainerInterface $container;
 
     /**
-     * Declare default dependencies.
-     * @var array
+     * @var ConfigContract
      */
-    protected array $defaultDependencies = [
-        \Nin\Libs\Routing\RouteConfigInterface::class => \Nin\Libs\Routing\RoutingConfigurator::class,
-        \Nin\Libs\Request\RequestInterface::class => \Nin\Libs\Request\Factory::class,
-        \Nin\Libs\Auth\AuthManagerFactory::class => \Nin\Libs\Auth\AuthManager::class
-    ];
+    protected ConfigContract $config;
 
     /**
      * Declare dependencies.
@@ -52,8 +31,6 @@ abstract class AbstractApplication
     protected array $dependencies = [
     ];
 
-    abstract protected function configureRoutes(RouteConfigInterface $routes): RouteConfigInterface;
-
     /**
      * AbstractApplication constructor.
      * @param ContainerInterface $container
@@ -61,39 +38,74 @@ abstract class AbstractApplication
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
-
-        $this->boot();
     }
 
+    /**
+     * Binding dependency
+     *
+     * @param $instance
+     * @param null $concrete
+     */
     public function bind($instance, $concrete = null)
     {
         $this->container->bind($instance, $concrete);
     }
 
+    /**
+     * Binding singleton dependency
+     *
+     * @param $instance
+     * @param null $singleton
+     */
+    public function singleton($instance, $singleton = null)
+    {
+        $this->container->bind($instance, function () use ($singleton) {
+            return $singleton;
+        });
+    }
+
+    /**
+     * Resolve dependency
+     *
+     * @param $instance
+     * @return mixed
+     */
     public function make($instance)
     {
         return $this->container->make($instance);
     }
 
-    protected function registerDependencies($dependencies)
+    /**
+     * Check dependency
+     *
+     * @param $instance
+     * @return bool
+     */
+    public function has($instance): bool
     {
-        foreach ($dependencies as $interface => $instance) {
-            $this->container->bind($interface, $instance);
-        }
+        return $this->container->has($instance);
     }
 
+    /**
+     * Boot method
+     *
+     * @throws \ReflectionException
+     */
     public function boot()
     {
+        $this->loadConfigure();
+
+        $this->loadServiceProvider($this->config);
+
         /**
          * Register DI injection.
          */
-        $this->registerDependencies(array_merge($this->defaultDependencies, $this->dependencies));
+        $this->registerDependencies();
 
         /**
-         * Get Route instance from DI.
+         * Load Config
          */
-        $routeConfig = $this->make(\Nin\Libs\Routing\RouteConfigInterface::class);
-        $this->router = $this->configureRoutes($routeConfig)->getRoute();
+        $this->make(ConfigContract::class)->loadConfig();
 
         /**
          * Register Facade
@@ -101,31 +113,55 @@ abstract class AbstractApplication
         (new RegisterFacade())->bootstrap($this);
     }
 
+    /**
+     * Service Provider loader,
+     *
+     * @param ConfigContract $config
+     */
+    protected function loadServiceProvider(ConfigContract $config)
+    {
+        $servicesProvider = $config->get('services');
+        foreach ($servicesProvider as $service) {
+            $provider = new $service($this);
+            $provider->register();
+
+            if (property_exists($provider, 'bindings')) {
+                foreach ($provider->bindings as $key => $value) {
+                    $this->bind($key, $value);
+                }
+            }
+
+            if (property_exists($provider, 'singletons')) {
+                foreach ($provider->singletons as $key => $value) {
+                    $this->singleton($key, $value);
+                }
+            }
+        }
+    }
+
+    protected function loadConfigure()
+    {
+        $this->config = $this->make(ConfigContract::class);
+        $this->config->loadConfig();
+    }
+
+    /**
+     * Get router config
+     *
+     * @return RouteConfigInterface
+     */
     public function getRouterConfig(): RouteConfigInterface
     {
         return $this->routerConfig;
     }
 
-    public function handle()
+    /**
+     * Get app config
+     *
+     * @return ConfigContract
+     */
+    public function getConfig()
     {
-        try {
-            $parameters = $this->router->extractRoute();
-            $controller = explode("::", $parameters['controller']);
-            $controllerName = '\Nin\Controllers\\' . $controller[0];
-            $actionName = $controller[1];
-            $arguments = $parameters;
-            array_shift($arguments);
-            array_shift($arguments);
-
-
-            $controller = $this->make($controllerName);
-            echo $controller->$actionName(extract($arguments));
-            exit;
-        } catch (ResourceNotFoundException $e) {
-            echo $e->getMessage();
-            var_dump($e->getMessage());
-            exit;
-        }
+        return $this->config;
     }
-
 }

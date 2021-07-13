@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% block head %}
+        {#        <link rel="stylesheet" href="/assets/app.css"/>#}
+        <title>{% block title %}{% endblock %}</title>
+    {% endblock %}
+    {#        <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">#}
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,700" rel="stylesheet"/>
+    <script src="/assets/app.js"></script>
+</head>
+
+<body
+    class="h-screen overflow-hidden flex flex-col"
+    style="background: #edf2f7;font-family: 'Source Sans Pro', sans-serif">
+<main class="h-screen mb-auto flex items-center justify-center">
+    {% block content %}{% endblock %}
+</main>
+</body>
+
+</html>

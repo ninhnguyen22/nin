@@ -1,0 +1,41 @@
+# Application services
+services:
+  - \Nin\Libs\Provider\AppServiceProvider
+  - \Nin\Libs\Provider\RequestServiceProvider
+  - \Nin\Libs\Provider\RouteServiceProvider
+  - \Nin\Libs\Provider\FooServiceProvider
+  - \Nin\Libs\Provider\LoggerServiceProvider
+  - \Nin\Libs\Provider\ViewServiceProvider
+  - \Nin\Libs\Provider\ORMServiceProvider
+
+# Route
+router:
+  dir: config
+  file: routes.yaml
+
+# Logger
+log:
+  dir: logs
+  file: nin.log
+  name: nin_logger
+
+# View template
+view:
+  dir_loader: src/templates
+  cache: cache
+
+# ORM
+orm:
+  entities_dir:
+    - Entities
+  is_dev_mode: true
+  connection:
+    driver: "pdo_mysql"
+    host: "192.168.68.83"
+    dbname: "ni"
+    user: "root"
+    password: "root"
+
+
+
+foo: "bar"

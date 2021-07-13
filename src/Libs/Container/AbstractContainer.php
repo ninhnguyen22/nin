@@ -6,6 +6,10 @@ use Exception;
 use Closure;
 use ReflectionClass;
 
+/**
+ * Class AbstractContainer
+ * @package Nin\Libs\Container
+ */
 abstract class AbstractContainer implements ContainerInterface
 {
     /**
@@ -74,6 +78,7 @@ abstract class AbstractContainer implements ContainerInterface
         }
 
         $reflector = new ReflectionClass($concrete);
+
         // check if class is instantiable
         if (!$reflector->isInstantiable()) {
             throw new Exception("Class {$concrete} is not instantiable");

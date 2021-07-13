@@ -2,19 +2,43 @@
 
 namespace Nin\Libs;
 
+/**
+ * Class Singleton
+ * @package Nin\Libs
+ */
 class Singleton
 {
+    /**
+     * Instances singleton
+     * @var array
+     */
     private static $instances = [];
 
-    protected function __construct() { }
+    /**
+     * Prevent direct construction calls with the `new` operator.
+     */
+    protected function __construct()
+    {
+    }
 
-    protected function __clone() { }
+    /**
+     * Singletons should not be cloneable.
+     */
+    protected function __clone()
+    {
+    }
 
+    /**
+     * Singletons should not be restorable from strings.
+     */
     public function __wakeup()
     {
         throw new \Exception("Cannot unserialize singleton");
     }
 
+    /**
+     * @return mixed
+     */
     public static function getInstance()
     {
         $subclass = static::class;

@@ -2,7 +2,7 @@
 
 namespace Nin\Libs\Auth;
 
-class AuthManager implements AuthManagerFactory
+class AuthManager implements AuthManagerContract
 {
     public function user(): Factory
     {

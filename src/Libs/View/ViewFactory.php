@@ -8,7 +8,7 @@ namespace Nin\Libs\View;
  */
 interface ViewFactory
 {
-    public function getPageTemplate(): PageTemplate;
+    public function make(string $viewPath, $parameters = []);
 
-    public function getRenderer(): Renderer;
+    public function getTemplateFactory();
 }
