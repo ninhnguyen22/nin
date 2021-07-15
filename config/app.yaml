@@ -7,6 +7,7 @@ services:
   - \Nin\Libs\Provider\LoggerServiceProvider
   - \Nin\Libs\Provider\ViewServiceProvider
   - \Nin\Libs\Provider\ORMServiceProvider
+  - \App\Providers\AppServiceProvider
 
 # Route
 router:
@@ -21,13 +22,13 @@ log:
 
 # View template
 view:
-  dir_loader: src/templates
+  dir_loader: templates
   cache: cache
 
 # ORM
 orm:
   entities_dir:
-    - Entities
+    - app/Entities
   is_dev_mode: true
   connection:
     driver: "pdo_mysql"
