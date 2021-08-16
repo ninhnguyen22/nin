@@ -1,6 +1,7 @@
 # Application services
 services:
   - \Nin\Libs\Provider\AppServiceProvider
+  - \Nin\Libs\Provider\SessionServiceProvider
   - \Nin\Libs\Provider\RequestServiceProvider
   - \Nin\Libs\Provider\RouteServiceProvider
   - \Nin\Libs\Provider\FooServiceProvider

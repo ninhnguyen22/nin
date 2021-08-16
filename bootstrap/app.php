@@ -26,6 +26,12 @@ $application = new Application(new Container());
 /**
  * Bind Important Interfaces
  */
+
+/**
+ * Kernel
+ */
+$application->singleton(\Nin\Libs\Container\KernelContract::class, new App\Kernel($application));
+
 /**
  * Config
  */

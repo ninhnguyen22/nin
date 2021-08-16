@@ -4,15 +4,41 @@
 
 {% block content %}
 
-    <div class="flex flex-col">
-        <div>
-            <h2 class="text-6xl">Nin</h2>
+    <div class="flex items-center w-full mx-auto content-end">
+        <div class="text-center m-6 md:px-0 md:m-12 w-1/2 rounded shadow-xl">
+            <h1 class="mt-12 text-2xl md:text-3xl lg:text-5xl font-black leading-tight">
+                Nin
+            </h1>
+            <a href="{{ documentUrl }}"
+               class="inline-block mx-auto lg:mx-0 hover:underline bg-transparent text-gray-600 font-extrabold md:my-6 py-2 lg:py-4 px-8">View
+                Document</a>
         </div>
-        <div>
-            <a class="flex items-baseline mt-3 text-indigo-600 hover:text-indigo-900 focus:text-indigo-900" href="https://ninhnguyen22.github.io/blog/">
-                <span>Document</span>
-                <span class="text-xs ml-1">&#x279c;</span>
-            </a>
+        <div class="browser-mockup m-6 md:px-0 md:m-12 bg-white w-1/2 rounded shadow-xl">
+            <a href="{{ documentUrl }}di-container.html"
+               class="block mx-auto lg:mx-0 hover:underline bg-transparent text-gray-600 font-extrabold md:my-2 py-2 lg:py-2 px-8"
+            >DI Container</a>
+            <a href="{{ documentUrl }}service-provider.html"
+               class="block mx-auto lg:mx-0 hover:underline bg-transparent text-gray-600 font-extrabold md:my-2 py-2 lg:py-2 px-8"
+            >Service Provider</a>
+            <a href="{{ documentUrl }}logger.html"
+               class="block mx-auto lg:mx-0 hover:underline bg-transparent text-gray-600 font-extrabold md:my-2 py-2 lg:py-2 px-8"
+            >Logger</a>
+            <a href="{{ documentUrl }}facade.html"
+               class="block mx-auto lg:mx-0 hover:underline bg-transparent text-gray-600 font-extrabold md:my-2 py-2 lg:py-2 px-8"
+            >Facade</a>
+            <a href="{{ documentUrl }}config.html"
+               class="block mx-auto lg:mx-0 hover:underline bg-transparent text-gray-600 font-extrabold md:my-2 py-2 lg:py-2 px-8"
+            >Config</a>
+            <a href="{{ documentUrl }}view.html"
+               class="block mx-auto lg:mx-0 hover:underline bg-transparent text-gray-600 font-extrabold md:my-2 py-2 lg:py-2 px-8"
+            >View</a>
+            <a href="{{ documentUrl }}http-requests.html"
+               class="block mx-auto lg:mx-0 hover:underline bg-transparent text-gray-600 font-extrabold md:my-2 py-2 lg:py-2 px-8"
+            >HTTP Requests</a>
+            <a href="{{ documentUrl }}orm-entity-manager.html"
+               class="block mx-auto lg:mx-0 hover:underline bg-transparent text-gray-600 font-extrabold md:my-2 py-2 lg:py-2 px-8"
+            >ORM</a>
         </div>
     </div>
+
 {% endblock %}

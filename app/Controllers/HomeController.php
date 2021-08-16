@@ -9,6 +9,6 @@ class HomeController extends AbstractController
 {
     public function indexAction()
     {
-        return View::make('home');
+       return View::make('home', ['documentUrl' => 'https://ninhnguyen22.github.io/blog/docs/nin/']);
     }
 }
